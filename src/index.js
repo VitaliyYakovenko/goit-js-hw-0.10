@@ -1,23 +1,34 @@
 import {getAllBreeds,getBreedByName,getCatImgByName} from "./cat-api";
-import createMarkup from "./createMarkup";
-import {imgRender, currentCatRender} from "./currentCatRender";
-const selectEl = document.querySelector(".breed-select");
+import { imgRender, currentCatRender } from "./currentCatRender";
+import SlimSelect from 'slim-select';
+import 'slim-select/dist/slimselect.css';
+const selectEl = document.querySelector(".breed-select")
 const catInfoEL = document.querySelector(".cat-info");
 
-const loadingAlertEl = document.createElement("p");
-loadingAlertEl.textContent = 'Loading data, please wait...';
+const loadingAlertEl = document.createElement("span");
+loadingAlertEl.classList.add("loader")
+
 
 selectEl.addEventListener("change", onGetBreeds);
 createOptionBreed();
 
 function createOptionBreed() {
-    getAllBreeds().then(render);
+    getAllBreeds().then(renderBreedSelect);
 };
 
 
-function render(cats) {
-    const markup = createMarkup(cats);
-    selectEl.insertAdjacentHTML("beforeend", markup);
+function renderBreedSelect(cats) {
+
+    const breedOptions = cats.map(cat => ({
+        text: cat.name,  
+        value: cat.id     
+      }));
+    
+    new SlimSelect({
+     select: '#single',
+     placeholder: 'Выберите породу',
+     data: breedOptions,
+    });
 };
 
 
